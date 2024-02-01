@@ -1,0 +1,6 @@
+env
+*.sqlite3
+*.pyc
+venv
+static
+.vscode
