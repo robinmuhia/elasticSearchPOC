@@ -72,15 +72,13 @@ class BookViewSet(PaginatedElasticSearchAPIView):
     document_class = BookDocument
 
     def generate_q_expression(self, query):
-        # Determine if the query is a string or an integer
-        is_string_query = isinstance(query, str)
-
-        # Build Q expression based on the type of query
-        if is_string_query:
-            return Q("bool", should=[
-                Q("multi_match", query=query, fields=["title", "description"], fuzziness="auto"),
-            ])
-        else:
+        try:
+            int(query)
             return Q("bool", should=[
                 Q("multi_match", query=query, fields=["year", "rating", "global_ranking", "length", "revenue"]),
             ])
+        except ValueError:
+            return Q("bool", should=[
+                Q("multi_match", query=query, fields=["title", "description"], fuzziness="auto"),
+            ])
+

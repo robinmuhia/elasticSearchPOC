@@ -1,18 +1,17 @@
-# DjangoFlix - Search from a millions of movies and TV shows using Django + ElasticSearch 🚀
+This is a POC to introduce elastic search to a company I work for.
 
-This is POC to introduce elastic search to a company i work for
-
-# Recommendation
+## Recommendation
 
 I recommend reading the following books to grasp relevant search:
 
-[1. Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems](https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321)
-[2. Relevant Search: With applications for Solr and Elasticsearch](https://www.amazon.com/Relevant-Search-applications-Solr-Elasticsearch/dp/161729277X)
+1. [Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems](https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321)
+2. [Relevant Search: With applications for Solr and Elasticsearch](https://www.amazon.com/Relevant-Search-applications-Solr-Elasticsearch/dp/161729277X)
 
-### 1. Clone the repo
+## 1. Clone the repo
 
 ```bash
 git clone https://github.com/robinmuhia/elasticSearchPOC.git
+
 ```
 
 ### 2. Install required packages

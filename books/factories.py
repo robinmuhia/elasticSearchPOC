@@ -34,4 +34,4 @@ class BookFactory(factory.django.DjangoModelFactory):
     rating = factory.Faker("pyfloat", left_digits=2, right_digits=1, positive=True)
     genre = factory.SubFactory(GenreFactory)
     country = factory.SubFactory(CountryFactory)
-    director = factory.SubFactory(DirectorFactory)
+    author = factory.SubFactory(AuthorFactory)

@@ -7,7 +7,7 @@ django-environ==0.11.2
 django-extensions==3.2.3
 djangorestframework==3.14.0
 elastic-transport==8.12.0
-elasticsearch==8.12.0
+elasticsearch==8.0.0
 elasticsearch-dsl==8.12.0
 psycopg2==2.9.9
 python-dateutil==2.8.2

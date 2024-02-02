@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-
+from django.db import transaction
 from ...factories import CountryFactory, AuthorFactory, GenreFactory, BookFactory
 
 
@@ -13,6 +13,7 @@ class Command(BaseCommand):
             "no_of_books", type=int, help="no of books to generate in database"
         )
 
+    @transaction.atomic
     def handle(self, *args, **options):
 
         print("Creating Books")
