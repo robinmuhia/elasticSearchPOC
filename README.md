@@ -16,6 +16,19 @@ git clone https://github.com/robinmuhia/elasticSearchPOC.git
 
 ### 2. Install required packages
 
+with docker;
+
+```bash
+#postgres
+docker run --rm --name postgres_container -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres:latest
+
+#elastic search
+    docker run --rm --name elasticsearch_container -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" elasticsearch:8.10.2
+
+```
+
+for system installs
+
 ```bash
 sudo apt update -y
 # install postgresql as sqlite is not efficient enough to handle millions of records
