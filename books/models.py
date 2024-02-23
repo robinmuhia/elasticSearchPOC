@@ -1,30 +1,32 @@
 from django.db import models
 
+from .mixins import GenericMixin
+
 # Model Structure for our Movie Database
 
 
-class Country(models.Model):
+class Country(GenericMixin):
     name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
 
 
-class Genre(models.Model):
+class Genre(GenericMixin):
     name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 
-class Author(models.Model):
+class Author(GenericMixin):
     name = models.CharField(max_length=200)
 
     def __str__(self):
         return self.name
 
 
-class Book(models.Model):
+class Book(GenericMixin):
     title = models.CharField(max_length=100)
     description = models.TextField()
     genre = models.ForeignKey(Genre, on_delete=models.CASCADE)

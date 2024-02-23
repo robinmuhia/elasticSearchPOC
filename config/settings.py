@@ -91,9 +91,9 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dslelastic",
-        "USER": "dslelastic",
-        "PASSWORD": "dslelastic",
+        "NAME": "elastic",
+        "USER": "elastic",
+        "PASSWORD": "elastic",
         "HOST": "localhost",
         "PORT": 5432,
     }
@@ -161,10 +161,13 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 10,
 }
 
-
 ELASTICSEARCH_DSL = {
     "default": {
-        "hosts": ["http://localhost:9200"],
+        "hosts": [os.getenv("ELASTICSEARCH_URL", "http://localhost:9200")],
     },
 }
-
+ELASTICSEARCH_DSL_SIGNAL_PROCESSOR = "django_elasticsearch_dsl.signals.RealTimeSignalProcessor"
+ELASTICSEARCH_DSL_INDEX_SETTINGS = {}
+ELASTICSEARCH_DSL_AUTOSYNC = True
+ELASTICSEARCH_DSL_AUTO_REFRESH = True
+ELASTICSEARCH_DSL_PARALLEL = False

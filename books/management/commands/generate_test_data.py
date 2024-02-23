@@ -1,21 +1,18 @@
 from django.core.management.base import BaseCommand
 from django.db import transaction
-from ...factories import CountryFactory, AuthorFactory, GenreFactory, BookFactory
+
+from ...factories import AuthorFactory, BookFactory, CountryFactory, GenreFactory
 
 
 class Command(BaseCommand):
-
     help_text = "Generate books"
     batch_size = 10000
 
     def add_arguments(self, parser):
-        parser.add_argument(
-            "no_of_books", type=int, help="no of books to generate in database"
-        )
+        parser.add_argument("no_of_books", type=int, help="no of books to generate in database")
 
     @transaction.atomic
     def handle(self, *args, **options):
-
         print("Creating Books")
         CountryFactory.create_batch(194)
         print("created 194 countries")

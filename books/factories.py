@@ -1,6 +1,6 @@
-from .models import Country, Genre, Author, Book
-
 import factory
+
+from .models import Author, Book, Country, Genre
 
 
 class CountryFactory(factory.django.DjangoModelFactory):
