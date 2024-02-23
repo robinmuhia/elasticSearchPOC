@@ -7,6 +7,11 @@ I recommend reading the following books to grasp relevant search:
 1. [Designing Data-Intensive Applications: The Big Ideas Behind Reliable, Scalable, and Maintainable Systems](https://www.amazon.com/Designing-Data-Intensive-Applications-Reliable-Maintainable/dp/1449373321)
 2. [Relevant Search: With applications for Solr and Elasticsearch](https://www.amazon.com/Relevant-Search-applications-Solr-Elasticsearch/dp/161729277X)
 
+Shout-out to the following articles whose insight proved invaluable:
+
+1. [Haystack Django by Suarav](https://www.linkedin.com/pulse/build-blazing-fast-rest-api-using-django-haystack-saurav-sharma/)
+2. [Django Drf by Nik Tomazic(swayed me to django dsl)](https://www.testdriven.io/blog/django-drf-elasticsearch/)
+
 ## 1. Clone the repo
 
 ```bash
