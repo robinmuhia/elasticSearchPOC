@@ -1,84 +1,74 @@
-from .models import Genre,Book,Country,Author
-from .serializers import GenreSerializer,BookSerializer,CountrySerializer,AuthorSerializer,SearchSerializer
-import abc
-from .documents import BookDocument
+import copy
+from abc import abstractmethod
 
-from django.http import HttpResponse
-from elasticsearch_dsl import Q
+from elasticsearch_dsl import Document, Q
+from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
-from rest_framework.views import APIView
+from rest_framework.request import Request
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 
-class PaginatedElasticSearchAPIView(APIView, LimitOffsetPagination):
-    serializer_class = None
-    document_class = None
+from .documents import BookDocument
+from .models import Book
+from .serializers import BookSerializer
 
-    @abc.abstractmethod
-    def generate_q_expression(self, query):
+
+class PaginatedElasticSearchAPIView(ModelViewSet, LimitOffsetPagination):
+    document_class: Document = None
+
+    @abstractmethod
+    def generate_search_query(self, search_terms_list, param_filters):
         """This method should be overridden
         and return a Q() expression."""
 
-    def get(self, request):
+    @action(methods=["GET"], detail=False)
+    def search(self, request: Request):
         try:
-            serializer = SearchSerializer(data=request.query_params)
-            serializer.is_valid(raise_exception=True)
-            query:dict = serializer.validated_data.get("query")
-            if query is None:
-                return HttpResponse(content="No search parameters provided",status=400)
-            q = self.generate_q_expression(query)
-            search = self.document_class.search().query(q)
-            response = search.execute()
+            params = copy.deepcopy(request.query_params)
+            search_terms = params.pop("search", None)
+            query = self.generate_search_query(
+                search_terms_list=search_terms, param_filters=params
+            )
 
-            print(f"Found {response.hits.total.value} hit(s) for query: '{query}'")
+            search = self.document_class.search().query(query)
+            response = search.to_queryset()
 
-            results = self.paginate_queryset(response, request, view=self)
+            results = self.paginate_queryset(response)
             serializer = self.serializer_class(results, many=True)
+
             return self.get_paginated_response(serializer.data)
         except Exception as e:
-            return HttpResponse(e, status=500)
+            return Response(e, status=500)
 
-class GenreViewSet(PaginatedElasticSearchAPIView):
-    serializer_class = GenreSerializer
-    queryset = Genre.objects.all()
-
-    def generate_q_expression(self, query):
-        return Q("bool",
-                    should=[
-                        Q("match", name=query),
-                    ], minimum_should_match=1)
-
-
-class CountryViewSet(PaginatedElasticSearchAPIView):
-    serializer_class = CountrySerializer
-    queryset = Country.objects.all()
-
-    def generate_q_expression(self, query):
-        return Q("bool",
-                    should=[
-                        Q("match", name=query),
-                    ], minimum_should_match=1)
-
-class AuthorViewSet(PaginatedElasticSearchAPIView):
-    serializer_class = AuthorSerializer
-    queryset = Author.objects.all()
-    def generate_q_expression(self, query):
-        return Q("bool",
-                    should=[
-                        Q("match", name=query),
-                    ], minimum_should_match=1)
 
 class BookViewSet(PaginatedElasticSearchAPIView):
     serializer_class = BookSerializer
     queryset = Book.objects.all()
     document_class = BookDocument
 
-    def generate_q_expression(self, query):
-        try:
-            int(query)
-            return Q("bool", should=[
-                Q("multi_match", query=query, fields=["year", "rating", "global_ranking", "length", "revenue"]),
-            ])
-        except ValueError:
-            return Q("bool", should=[
-                Q("multi_match", query=query, fields=["title", "description"], fuzziness="auto"),
-            ])
+    def generate_search_query(self, search_terms_list: list[str], param_filters: dict):
+        if search_terms_list is None:
+            return Q("match_all")
+        search_terms = search_terms_list[0].replace("\x00", "")
+        search_terms.replace(",", " ")
+        search_fields = ["title", "description"]
+        filter_fields = ["year", "rating"]
+        query = Q("multi_match", query=search_terms, fields=search_fields, fuzziness="auto")
 
+        wildcard_query = Q(
+            "bool",
+            should=[
+                Q("wildcard", **{field: f"*{search_terms.lower()}*"}) for field in search_fields
+            ],
+        )
+        query = query | wildcard_query
+
+        if len(param_filters) > 0:
+            filters = []
+            for field in filter_fields:
+                if field in param_filters:
+                    filters.append(Q("term", **{field: param_filters[field]}))
+            filter_query = Q("bool", should=[query], filter=filters)
+            query = query & filter_query
+
+        return query

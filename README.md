@@ -94,5 +94,8 @@ python manage.py search_index --rebuild
 
 ```bash
 python manage.py runserver
-http://localhost:8000/api/books/?query=t&facets=year:2004
+# Try this one to get data to fuzzy search for
+http://localhost:8000/api/books/search/
+# Try now with search params
+http://localhost:8000/api/books/search/?search=""&year=""&rating=""
 ```
