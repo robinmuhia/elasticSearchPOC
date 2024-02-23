@@ -28,7 +28,7 @@ with docker;
 docker run --rm --name postgres_container -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword -d postgres:latest
 
 #elastic search
-    docker run --rm --name elasticsearch_container -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" elasticsearch:8.10.2
+docker run --rm --name elasticsearch_container -p 9200:9200 -e "discovery.type=single-node" -e "xpack.security.enabled=false" elasticsearch:8.10.2
 
 ```
 
