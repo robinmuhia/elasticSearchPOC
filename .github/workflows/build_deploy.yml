@@ -1,0 +1,45 @@
+name: build and deploy
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      elasticsearch_test:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+        env:
+          cluster.name: docker-cluster
+          discovery.type: single-node
+          bootstrap.memory_lock: "true"
+          xpack.security.enabled: "false"
+          ES_JAVA_OPTS: "-Xms256m -Xmx256m"
+        ports:
+          - 9200:9200
+          - 9300:9300
+        options: --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run tests
+        run: |
+          pytest
