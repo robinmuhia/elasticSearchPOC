@@ -1,7 +1,7 @@
 from django_elasticsearch_dsl import Document, fields
 from django_elasticsearch_dsl.registries import registry
 
-from .models import Author, Book, Country, Genre
+from elastic_search.books.models import Author, Book, Country, Genre
 
 
 @registry.register_document
@@ -41,8 +41,10 @@ class BookDocument(Document):
 
     def get_instances_from_related(self, related_instance):
         if isinstance(related_instance, Genre):
-            return BookDocument.search().filter("term", genre__name=related_instance.name)
+            return related_instance.genres.all()
         elif isinstance(related_instance, Country):
-            return BookDocument.search().filter("term", country__name=related_instance.name)
+            return related_instance.countries.all()
         elif isinstance(related_instance, Author):
-            return BookDocument.search().filter("term", author__name=related_instance.name)
+            return related_instance.authors.all()
+        else:
+            return []

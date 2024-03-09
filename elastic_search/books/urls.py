@@ -1,6 +1,6 @@
 from rest_framework.routers import SimpleRouter
 
-from . import views
+from elastic_search.books import views
 
 router = SimpleRouter()
 
