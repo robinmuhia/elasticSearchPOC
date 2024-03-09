@@ -13,6 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
       elasticsearch_test:
         image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
         env:
@@ -23,7 +36,6 @@ jobs:
           ES_JAVA_OPTS: "-Xms256m -Xmx256m"
         ports:
           - 9200:9200
-          - 9300:9300
         options: --health-cmd="curl -f http://localhost:9200/_cluster/health || exit 1" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
