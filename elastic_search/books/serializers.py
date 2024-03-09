@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Author, Book, Country, Genre
+from elastic_search.books.models import Author, Book, Country, Genre
 
 
 class GenreSerializer(serializers.ModelSerializer):

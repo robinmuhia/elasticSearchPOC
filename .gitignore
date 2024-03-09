@@ -4,3 +4,4 @@ env
 venv
 static
 .vscode
+__pycache__

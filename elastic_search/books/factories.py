@@ -1,6 +1,6 @@
 import factory
 
-from .models import Author, Book, Country, Genre
+from elastic_search.books.models import Author, Book, Country, Genre
 
 
 class CountryFactory(factory.django.DjangoModelFactory):

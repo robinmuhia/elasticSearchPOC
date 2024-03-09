@@ -8,9 +8,9 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
-from .documents import BookDocument
-from .models import Book
-from .serializers import BookSerializer
+from elastic_search.books.documents import BookDocument
+from elastic_search.books.models import Book
+from elastic_search.books.serializers import BookSerializer
 
 
 class PaginatedElasticSearchAPIView(ModelViewSet, LimitOffsetPagination):
