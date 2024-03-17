@@ -58,7 +58,7 @@ class BookViewSet(PaginatedElasticSearchAPIView):
         wildcard_query = Q(
             "bool",
             should=[
-                Q("wildcard", **{field: f"*{search_terms.lower()}*"}) for field in search_fields
+                Q("wildcard", **{field: f"{search_terms.lower()}*"}) for field in search_fields
             ],
         )
         query = query | wildcard_query
