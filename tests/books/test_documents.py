@@ -6,8 +6,6 @@ from elastic_search.books.documents import BookDocument
 from elastic_search.books.models import Author, Book, Country, Genre
 from tests.utils.elasticsearch_test import ElasticSearchMixin
 
-pytestmark = pytest.mark.django_db
-
 
 @pytest.mark.django_db
 class BookDocumentTest(TestCase, ElasticSearchMixin):
